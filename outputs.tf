@@ -1,3 +1,7 @@
+output "dedicated_hardware_security_modules_id" {
+  description = "Map of id values across all dedicated_hardware_security_modules, keyed the same as var.dedicated_hardware_security_modules"
+  value       = { for k, v in azurerm_dedicated_hardware_security_module.dedicated_hardware_security_modules : k => v.id }
+}
 output "dedicated_hardware_security_modules_location" {
   description = "Map of location values across all dedicated_hardware_security_modules, keyed the same as var.dedicated_hardware_security_modules"
   value       = { for k, v in azurerm_dedicated_hardware_security_module.dedicated_hardware_security_modules : k => v.location }

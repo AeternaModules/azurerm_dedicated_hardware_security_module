@@ -35,22 +35,6 @@ EOT
       subnet_id                              = string
     }))
   }))
-  validation {
-    condition = alltrue([
-      for k, v in var.dedicated_hardware_security_modules : (
-        v.stamp_id == null || (contains(["stamp1", "stamp2"], v.stamp_id))
-      )
-    ])
-    error_message = "must be one of: stamp1, stamp2"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.dedicated_hardware_security_modules : (
-        v.zones == null || (length(v.zones) > 0)
-      )
-    ])
-    error_message = "must not be empty"
-  }
   # --- Unconfirmed validation candidates, derived from azurerm_dedicated_hardware_security_module's provider source ---
   # Not auto-enabled: either a bespoke provider validator we can't safely translate,
   # or a path that crosses a list-typed block (needs its own for_each wrapping).
@@ -95,6 +79,12 @@ EOT
   #   source:    [from commonids.ValidateSubnetID] !ok
   # path: management_network_profile.subnet_id
   #   source:    [from commonids.ValidateSubnetID] err != nil
+  # path: stamp_id
+  #   condition: contains(["stamp1", "stamp2"], value)
+  #   message:   must be one of: stamp1, stamp2
+  # path: zones[*]
+  #   condition: length(value) > 0
+  #   message:   must not be empty
   # path: tags
   #   condition: length(value) <= 50
   #   message:   [from tags.Validate: invalid when len(value) > 50]
